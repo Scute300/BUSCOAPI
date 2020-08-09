@@ -7,7 +7,7 @@ class CurriculoSchema extends Schema {
   up () {
     this.create('curriculos', (table) => {
       table.increments()
-      table.integer('user_id').references('id').inTable('users').unsigned()
+      table.integer('user_id').notNullable().unsigned()
       table.string('cvlink', 350).notNullable()
       table.timestamps()
     })
