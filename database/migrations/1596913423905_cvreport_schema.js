@@ -8,7 +8,8 @@ class CvreportSchema extends Schema {
     this.create('cvreports', (table) => {
       table.increments()
       table.integer('reportante_id').unsigned()
-        table.integer('curriculo_id').unsigned()
+        table.integer('curriculo_id').unsigned().references('id').inTable('curriculos').unsigned().notNullable()
+        .onDelete('CASCADE')
         table.string('report', 350).notNullable()
       table.timestamps()
     })

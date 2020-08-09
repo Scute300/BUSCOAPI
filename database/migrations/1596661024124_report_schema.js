@@ -8,7 +8,8 @@ class ReportSchema extends Schema {
     this.create('reports', (table) => {
       table.increments()
       table.integer('reportante_id').unsigned()
-      table.integer('post_id').unsigned()
+      table.integer('post_id').unsigned().references('id').inTable('posts').unsigned().notNullable()
+      .onDelete('CASCADE')
       table.string('report', 350).notNullable()
       table.timestamps()
     })
