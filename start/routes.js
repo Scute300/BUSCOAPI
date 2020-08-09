@@ -73,6 +73,19 @@ Route.group(()=>{
 .prefix('api/v2/post')
 .middleware('auth')
 
+Route.group(()=>{
+  Route.get('/getreports/:page', 'PanelController.getreports')
+  Route.delete('/deletereport/:id', 'PanelController.deletepost')
+  Route.get('/reportante/:id', 'PanelController.viewreportante')
+  Route.get('/getcvreports/:page', 'PanelController.getcvreports')
+  Route.delete('/deletecvreports/:id', 'PanelController.deletecvpost')
+  Route.get('/viewcvreportante/:id', 'PanelController.viewcvreportante')
+  Route.delete('/deleteuser/:id', 'PanelController.deleteuser')
+
+})
+.prefix('api/v2/panel')
+.middleware('auth')
+
 
 Route.post('/curriculum', async ({response, request }) => {
   // Set the callback to process the 'profile_pic' file manually
