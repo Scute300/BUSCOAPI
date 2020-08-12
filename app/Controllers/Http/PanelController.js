@@ -6,23 +6,42 @@ const Cvreport = use('App/Models/Cvreport')
 class PanelController {
 
     async getreports({auth, response, params}){
+
+        const pagedata = request.only(['foo']);
+        const page = parseInt(pagedata.foo , 10);
+        
         const user = auth.current.user
-
         if(user.username == 'RootAdmin'){
-            const reports = await Report.query()
-            .with('post', builder => {
-                builder.with('user')
-            })
-            .paginate(params.page, 3)
-
-            return response.json({
-                status: 'sure',
-                data : reports
-            })
-        }else {
-            return response.status(401).json({
-                status: 'unautorized',
-                data: 'wrong'
+            switch(params.type){
+                case 'reports':
+                    const reports = await Report.query()
+                    .with('post', builder => {
+                        builder.with('user')
+                    })
+                    .paginate(page, 3)
+        
+                    return response.json({
+                        status: 'sure',
+                        data : reports
+                    })
+                break
+                case 'curriculums':
+                    const reports = await Cvreport.query()
+                    .with('post', builder => {
+                        builder.with('user')
+                    })
+                    .paginate(page, 3)
+        
+                    return response.json({
+                        status: 'sure',
+                        data : reports
+                    })
+                break
+            }
+        } else {
+            return response.status(414).json({
+                status : 'wrong',
+                data: 'no autorizado'
             })
         }
     }
@@ -69,29 +88,6 @@ class PanelController {
         }
     
     }
-
-    async getcvreports({auth, response, params}){
-        const user = auth.current.user
-
-        if(user.username == 'RootAdmin'){
-            const reports = await Cvreport.query()
-            .with('post', builder => {
-                builder.with('user')
-            })
-            .paginate(params.page, 3)
-
-            return response.json({
-                status: 'sure',
-                data : reports
-            })
-        }else {
-            return response.status(401).json({
-                status: 'unautorized',
-                data: 'wrong'
-            })
-        }
-    }
-
     async deletecvpost ({auth, response, params}){
         const user = auth.current.user
         
