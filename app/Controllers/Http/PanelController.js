@@ -2,6 +2,9 @@
 const User = use('App/Models/User')
 const Report = use('App/Models/Report')
 const Cvreport = use('App/Models/Cvreport')
+const Post = use('App/Models/Post')
+const Postimage = use('App/Models/Postimage')
+const Cloudinary = use('Cloudinary');
 
 class PanelController {
 
@@ -15,6 +18,7 @@ class PanelController {
                     reports = await Report.query()
                     .with('post', builder => {
                         builder.with('user')
+                        builder.with('images')
                     })
                     .paginate(data.page, 3)
         
@@ -25,9 +29,7 @@ class PanelController {
                 break
                 case 'curriculums':
                     reports = await Cvreport.query()
-                    .with('post', builder => {
-                        builder.with('user')
-                    })
+                    .with('curriculo')
                     .paginate(data.page, 3)
         
                     return response.json({
@@ -52,6 +54,21 @@ class PanelController {
             const post = await Post.findBy('id', params.id)
             await post.delete()
             
+            const images = await Postimage.query()
+            .where('post_id', params.id)
+            .fetch()
+
+            const pimages = await images.toJSON()
+    
+            for (let pimage of pimages) {
+                await Cloudinary.v2.uploader.destroy(pimage.publicid)
+            }
+
+            const delimages = await Postimage
+            .query()
+            .where('post_id', params.id)
+            .delete()
+            
             return response.json({
                 status:'sure',
                 data: 'Moderado'
@@ -65,27 +82,6 @@ class PanelController {
         }
     }
 
-    async viewreportante({auth,params,response}){
-        const user = await auth.current.user
-        if(user.username == 'RootAdmin'){
-            const report = await Report.findBy('id', params.id)
-            
-            const rjson = await report.toJSON()
-
-            const reportante = await User.findBy('id', rjson.reportante_id)
-
-            return response.json({
-                status: 'sure',
-                data: reportante
-            })
-        }else {
-            return response.status(401).json({
-                status: 'unautorized',
-                data: 'wrong'
-            })
-        }
-    
-    }
 
     async deletecvpost ({auth, response, params}){
         const user = auth.current.user
@@ -108,34 +104,44 @@ class PanelController {
         }
     }
 
-    async viewcvreportante({auth,params,response}){
-        const user = await auth.current.user
-        if(user.username == 'RootAdmin'){
-            const report = await Cvreport.findBy('id', params.id)
-            
-            const rjson = await report.toJSON()
-
-            const reportante = await User.findBy('id', rjson.reportante_id)
-
-            return response.json({
-                status: 'sure',
-                data: reportante
-            })
-        }else {
-            return response.status(401).json({
-                status: 'unautorized',
-                data: 'wrong'
-            })
-        }
-    
-    }
-
     async deleteuser({auth, params, response}){
         const user = auth.current.user
 
         if(user.username == 'RootAdmin'){
+
+            const posts = await Post.query()
+            .where('user_id', params.id)
+            .with('images')
+            .fetch()
+            
+            const pobjects = await posts.toJSON()
+
+            let images = []
+
+
+            for (let pobject of pobjects) {
+                await pobject.images.concat(images)
+            }
+
+
+            for (let image of images) {
+                await Cloudinary.v2.uploader.destroy(image.publicid)
+            }
+
+            for (let upobject of pobjects) {
+                const deletimages = await Postimage.query()
+                .where('post_id', upobject.id)
+                .delete()
+            }
+
+            const deleteposts = await Post.query()
+            .where('user_id', params.id)
+            .delete()
+
+
             const u = await User.findBy('id', params.id)
             await u.delete()
+
 
 
             return response.json({
@@ -146,6 +152,68 @@ class PanelController {
             return response.status(401).json({
                 status: 'unautorized',
                 data: 'wrong'
+            })
+        }
+    }
+
+    async getonecv({params, auth, request, response}){
+        const data = request.only('type')
+        const user = auth.current.user
+        if(user.username == 'RootAdmin'){
+            let report = ''
+            let reportante = ''
+            switch(data.type){
+    
+                case 'post':
+                    report = await Report.query()
+                    .where('id', params.id)
+                    .with('post', builder => {
+                        builder.with('user')
+                        builder.with('images')
+                    })
+                    .first()
+                    let reporto = await report.toJSON()
+
+                    reportante = await User.query()
+                    .where('id', reporto.reportante_id)
+                    .first()
+
+                    let oreportante = reportante.toJSON()
+
+                    let finalresponse = {report : report, reportante : oreportante}
+
+                    return response.json({
+                        status: 'sure',
+                        data: finalresponse
+                    })
+                break
+                case 'cvreports':
+                    report = await Cvreport.query()
+                    .where('id', params.id)
+                    .with('curriculo')
+                    .first()
+
+                    let reportcvo = await report.toJSON()
+
+                    cvreportante = await User.query()
+                    .where('id', reportcvo.reportante_id)
+                    .first()
+
+                    let ocvreportante = cvreportante.toJSON()
+
+                    let cvfinalresponse = {report : report, reportante : ocvreportante}
+
+                    return response.json({
+                        status: 'sure',
+                        data: cvfinalresponse
+                    })
+                break
+            }
+
+        }else{
+            return response.status(401).json({
+                data: 'wrong',
+                status: 'no autorizado'
             })
         }
     }
