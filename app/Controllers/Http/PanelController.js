@@ -5,6 +5,7 @@ const Cvreport = use('App/Models/Cvreport')
 const Post = use('App/Models/Post')
 const Postimage = use('App/Models/Postimage')
 const Cloudinary = use('Cloudinary');
+const Banlist = use('App/Models/Banlist')
 
 class PanelController {
 
@@ -104,50 +105,31 @@ class PanelController {
         }
     }
 
-    async deleteuser({auth, params, response}){
+    async banuser({auth, params, response}){
         const user = auth.current.user
 
         if(user.username == 'RootAdmin'){
+            const usuario = await User.findBy('id', params.id)
+            const usuariobject = await usuario.toJSON()
+            const banverify = await Banlist.findBy('user_id', usuariobject.id)
+            if (banverify == null){
+                const ban = await new Banlist()
+                ban.user_id = usuariobject.id
+                ban.email = usuariobject.email
+                await ban.save()
 
-            const posts = await Post.query()
-            .where('user_id', params.id)
-            .with('images')
-            .fetch()
-            
-            const pobjects = await posts.toJSON()
+                return response.json({
+                    status: 'sure',
+                    data: 'Baneado'
+                })
+            }else{
 
-            let images = []
+                return response.json({
+                    status: 'sure',
+                    data: 'Este usuario ya ha sido baneado'
+                })
 
-
-            for (let pobject of pobjects) {
-                await pobject.images.concat(images)
             }
-
-
-            for (let image of images) {
-                await Cloudinary.v2.uploader.destroy(image.publicid)
-            }
-
-            for (let upobject of pobjects) {
-                const deletimages = await Postimage.query()
-                .where('post_id', upobject.id)
-                .delete()
-            }
-
-            const deleteposts = await Post.query()
-            .where('user_id', params.id)
-            .delete()
-
-
-            const u = await User.findBy('id', params.id)
-            await u.delete()
-
-
-
-            return response.json({
-                status: 'sure',
-                data: 'Usuario eliminado'
-            })
         }else {
             return response.status(401).json({
                 status: 'unautorized',
@@ -214,6 +196,23 @@ class PanelController {
             return response.status(401).json({
                 data: 'wrong',
                 status: 'no autorizado'
+            })
+        }
+    }
+
+    async eliminarreporte({auth, response, params}){
+        const user = await auth.current.user
+        if(user.username == 'RootAdmin'){
+            const report = await Report.findBy('id', params.id)
+            await report.delete()
+            return response.json({
+                status: 'sure',
+                data: 'Eliminado'
+            })
+        }else{
+            return response.status(413).json({
+                status: 'wrong',
+                message: 'no estás autorizado'
             })
         }
     }
