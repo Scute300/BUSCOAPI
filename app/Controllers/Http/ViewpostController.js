@@ -97,12 +97,9 @@ class ViewpostController {
 
 
         for (let post of allposts) {
-            let location = post.location
-            if(post.user.location !== null){
-                location = post.user.location
-            }            
+
             let image = post.images[0]
-            let fpost = {username : post.user.username, location : location,
+            let fpost = {username : post.user.username, location : post.location,
                         avatar: post.user.avatar, postname : post.name,
                         image: image.url , type: post.type, category: post.category,
                         price : post.price, status: post.status, id: post.id, creado : post.created_at
@@ -223,7 +220,7 @@ class ViewpostController {
                             .orderBy('created_at', 'DESC')
                             .paginate(page, 3)
                         break
-                        case('servicio'):
+                        case'servicio':
                             posts = await Post.query()
                             .where('type', parameters.type)
                             .where('name', 'like', '%' + parameters.find + '%')
