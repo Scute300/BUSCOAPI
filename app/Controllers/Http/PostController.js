@@ -9,7 +9,7 @@ const Banlist = use('App/Models/Banlist')
 
 class PostController { 
     async post ({auth, request, response}){
-        const data = request.only(['text', 'name', 'images', 'location' , 'type', 'category', 'price', 'status'])
+        const data = request.only(['text', 'name', 'images', 'type', 'category', 'price', 'status'])
         const banverify = await Banlist.findBy('user_id', auth.current.user.id)
         if (banverify == null){
           if(data.type == 'listado'){
@@ -17,10 +17,8 @@ class PostController {
               text: 'required|string|max:1500|min:50',
               name: 'required|string|min:10|max:150',
               images: 'required',
-              location : 'required|max:90|string',
               type: 'required|string|min:7|max:10',
               category: 'required|max:150',
-              price: 'required|max:100',
               status : 'required|max:5'
           }
 
@@ -46,34 +44,45 @@ class PostController {
               })
 
             } else {
-                const post = await new Post()
-                post.user_id = auth.current.user.id
-                post.name = data.name
-                post.type = data.type
-                post.location = data.location
-                post.price = data.price
-                post.category = data.category
-                post.text = data.text
-                post.status = data.status
-                await post.save()
+              if(auth.current.user.location !== null){
+                  const post = await new Post()
+                  post.user_id = auth.current.user.id
+                  post.name = data.name
+                  post.type = data.type
+                  post.location = auth.current.user.location
+                  post.price = data.price
+                  post.category = data.category
+                  post.text = data.text
+                  post.status = data.status
+                  await post.save()
                 
-                const posto = post.toJSON()
-
-                for (let image of data.images) {
-                  const pick = image['base64'];
-                  const resultado = await Cloudinary.v2.uploader.upload(pick);
-      
-                  const postimage = await new Postimage()
-                  postimage.post_id = posto.id
-                  postimage.url = resultado.secure_url
-                  postimage.publicid = resultado.public_id
-                  await postimage.save()
+                  const posto = post.toJSON()
+  
+                  for (let image of data.images) {
+                    if(data.images.length < 9){
+                      const pick = image['base64'];
+                      const resultado = await Cloudinary.v2.uploader.upload(pick);
+          
+                      const postimage = await new Postimage()
+                      postimage.post_id = posto.id
+                      postimage.url = resultado.secure_url
+                      postimage.publicid = resultado.public_id
+                      await postimage.save()
+                    } else {
+                      break;
+                    }
+                  }
+  
+                  return response.json({
+                      status : 'sure',
+                      data: post
+                  })
+                } else {
+                  return response.status(400).json({
+                    status="wrong",
+                    message : "Necesitas tener activada la ubicacion"
+                  })
                 }
-
-                return response.json({
-                    status : 'sure',
-                    data: post
-                })
 
             }
           }else if(data.type == 'negocio' || data.type == 'servicio'){
@@ -106,11 +115,12 @@ class PostController {
                   })
       
                 } else {
+                  if(auth.current.user.location !== null){
                     const post = await new Post()
                     post.user_id = auth.current.user.id
                     post.name = data.name
                     post.type = data.type
-                    post.location = data.location
+                    post.location = auth.current.user.location
                     post.category = data.category
                     post.text = data.text
                     await post.save()
@@ -132,6 +142,12 @@ class PostController {
                         status : 'sure',
                         data: post
                     })
+                  }else {
+                    return response.status(400).json({
+                      status : 'wrong',
+                      message :'necesitamos tu ubicación para poder postear'
+                    })
+                  }
       
               }
               
