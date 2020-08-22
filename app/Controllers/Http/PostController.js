@@ -12,6 +12,10 @@ class PostController {
         const data = request.only(['text', 'name', 'images', 'type', 'category', 'price', 'status'])
         const banverify = await Banlist.findBy('user_id', auth.current.user.id)
         if (banverify == null){
+          let price = 0
+          if(data.price !== null ){
+            pice = data.price
+          }
           if(data.type == 'listado'){
           const rules = {
               text: 'required|string|max:1500|min:50',
@@ -50,7 +54,7 @@ class PostController {
                   post.name = data.name
                   post.type = data.type
                   post.location = auth.current.user.location
-                  post.price = data.price
+                  post.price = price
                   post.category = data.category
                   post.text = data.text
                   post.status = data.status
@@ -188,7 +192,7 @@ class PostController {
                     post.name = data.name
                     post.type = data.type
                     post.location = data.location
-                    post.price = data.price
+                    post.price = price
                     post.text = data.text
                     await post.save()
                     
