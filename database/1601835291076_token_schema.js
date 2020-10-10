@@ -3,19 +3,20 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-class ResetpasswordSchema extends Schema {
+class TokenSchema extends Schema {
   up () {
-    this.create('resetpasswords', (table) => {
+    this.create('tokens', (table) => {
       table.increments()
-      table.string('email')
+      table.string('user_id')
+      table.string('session_id')
       table.string('token')
       table.timestamps()
     })
   }
 
   down () {
-    this.drop('resetpasswords')
+    this.drop('tokens')
   }
 }
 
-module.exports = ResetpasswordSchema
+module.exports = TokenSchema
