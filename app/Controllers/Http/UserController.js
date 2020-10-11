@@ -60,7 +60,7 @@ class UserController {
     
                 const token = data.token
                 let newtoken = await Token.findBy('session_id', data.type+usuario.id)
-                const registerverify = await Socialuser.findBy('social_type', data.type+usuario.id)
+                const registerverify = await User.findBy('social_type', data.type+usuario.id)
     
                 if(registerverify !== null && usuario.response == true){
                     const banverify = await Banlist.findBy('user_id', registerverify.id)
