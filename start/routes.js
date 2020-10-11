@@ -36,15 +36,10 @@ Route.group(() => {
 .prefix('api/v1')
 
 Route.group(()=>{
-  Route.get('/me', 'UsersController.me')
+  Route.get('/me', 'UserController.me')
 }).prefix('/api/v2').middleware('detect')
 
 
-Route.group(() => {
-  Route.get('/me', 'UserController.me')
-})
-.prefix('api/v2')
-.middleware('detect')
 
 Route.group(()=>{
   Route.put('/changeavatar', 'UserController.updateProfilePic')
