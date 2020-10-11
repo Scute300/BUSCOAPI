@@ -45,7 +45,7 @@ class UserController {
                         }).then(response =>{
                         usuario = {response : true, email:response.data.email != null ? response.data.email : 'Not email adress', 
                             name: response.data.name, username: response.data.given_name, token : data.token, id:response.data.id}
-                        console.log(response)
+                        
                         })
                         break;
                     case 'fb':
@@ -53,13 +53,13 @@ class UserController {
                         .then(response =>{
                         usuario = {response : true, email: response.data.email != null ? response.data.email : 'Not email adress',
                         name: response.data.name, username: response.data.name, token : data.token, id:response.data.id}
-                        console.log(response)
+                        
                         })
                     break;
                 }
     
                 const token = data.token
-                let newtoken = await Token.findBy('session_user_id', data.type+usuario.id)
+                let newtoken = await Token.findBy('session_id', data.type+usuario.id)
                 const registerverify = await Socialuser.findBy('social_type', data.type+usuario.id)
     
                 if(registerverify !== null && usuario.response == true){
@@ -85,7 +85,6 @@ class UserController {
                             return response.json({
                                 status : 'sure',
                                 token: newtoken.token,
-                                user: registerverify
                             })
                         }
                     } else {
