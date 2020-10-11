@@ -14,9 +14,8 @@ class DetectSession {
    */
   async handle ({ request }, next) {
     const tokenheader = request.header('Authorization')
-    const tokenjson = tokenheader !== undefined ? JSON.parse(tokenheader) : null
-    if(tokenjson !== null){
-      const token = await Token.findBy('token', tokenjson.token)
+      const token = await Token.findBy('token', tokenheader)
+      
       if(token !== null){
         const user = await User.findBy('id', token.user_id)
         banverify = await Banlist.findBy('user_id', token.user_id)
@@ -24,9 +23,6 @@ class DetectSession {
       }else {
         request.user = {status: '413', message:'Unautorized'}
       }
-    }else {
-      request.user = {status: '413', message:'Unautorized'}
-    }
     await next()
   }
 }

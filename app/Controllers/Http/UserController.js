@@ -68,7 +68,7 @@ class UserController {
                         if(newtoken !== null){
                             newtoken.user_id = registerverify.id
                             newtoken.session_id = data.type+usuario.id
-                            newtoken.token = token
+                            newtoken.token = data.type+token
                             await newtoken.save()
         
                             return response.json({
@@ -79,7 +79,7 @@ class UserController {
                         } else {
                             newtoken.user_id = registerverify.id
                             newtoken.session_id = data.type+usuario.id
-                            newtoken.token = token
+                            newtoken.token = data.type+token
                             await newtoken.save()
         
                             return response.json({
@@ -105,7 +105,7 @@ class UserController {
                          newtoken = await new Token()
                          newtoken.user_id = user.id
                          newtoken.session_id = data.type+usuario.id
-                         newtoken.token = token
+                         newtoken.token = data.type+token
                          await newtoken.save()
     
                          return response.json({
