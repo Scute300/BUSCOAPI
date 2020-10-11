@@ -67,7 +67,7 @@ class UserController {
                     if(banverify == null){
                         if(newtoken !== null){
                             newtoken.user_id = registerverify.id
-                            newtoken.session_type = data.type
+                            newtoken.session_id = data.type+usuario.id
                             newtoken.token = token
                             await newtoken.save()
         
@@ -78,7 +78,7 @@ class UserController {
                             })
                         } else {
                             newtoken.user_id = registerverify.id
-                            newtoken.session_type = data.type
+                            newtoken.session_id = data.type+usuario.id
                             newtoken.token = token
                             await newtoken.save()
         
@@ -103,8 +103,8 @@ class UserController {
                          await user.save()
      
                          newtoken = await new Token()
-                         newtoken.user_id = data.type+usuario.id
-                         newtoken.session_type = data.type
+                         newtoken.user_id = user.id
+                         newtoken.session_id = data.type+usuario.id
                          newtoken.token = token
                          await newtoken.save()
     
