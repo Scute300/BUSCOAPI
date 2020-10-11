@@ -28,6 +28,10 @@ class User extends Model {
   Token (){
     return this.hasOne('App/Models/Token')
   }
+
+  banlist (){
+    return this.belongsTo('App/Models/Banlist')
+  }
 }
 
 module.exports = User
