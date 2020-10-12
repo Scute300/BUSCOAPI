@@ -100,6 +100,7 @@ class UserController {
                          user.name = usuario.name
                          user.username = data.type+usuario.id
                          user.social_type = data.type+usuario.id
+                         user.email = data.email
                          await user.save()
      
                          newtoken = await new Token()

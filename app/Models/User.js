@@ -32,6 +32,10 @@ class User extends Model {
   banlist (){
     return this.belongsTo('App/Models/Banlist')
   }
+
+  negocios(){
+    return this.hasMany('App/Models/Negocio')
+  }
 }
 
 module.exports = User
