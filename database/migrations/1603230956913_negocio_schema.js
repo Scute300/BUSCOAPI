@@ -7,7 +7,7 @@ class NegocioSchema extends Schema {
   up () {
     this.create('negocios', (table) => {
       table.increments()
-      table.integer('user_id').references('id').inTable('users').unsigned().notNullable()
+      table.integer('user_id')
       table.string('logo').notNullable()
       table.string('portada').notNullable()
       table.string('nombre_negocio').notNullable()
