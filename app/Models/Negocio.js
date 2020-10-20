@@ -8,6 +8,9 @@ class Negocio extends Model {
 usuario (){
       return this.belongsTo('App/Models/Usuario')
     }
+tags(){
+    return this.hasMany('App/Models/Tag')
+}
 }
 
 module.exports = Negocio

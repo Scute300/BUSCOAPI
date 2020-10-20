@@ -5,6 +5,7 @@ const Cloudinary = use('Cloudinary')
 const Banlist = use('App/Models/Banlist')
 const axios = use('axios')
 const Token = use('App/Models/Token')
+const Negocio = use('App/Models/Negocio')
 
 class UserController {
 
@@ -133,10 +134,21 @@ class UserController {
 //Metodo "me"
     async me ({ request, response }) {
         if(request.user.status !== '413'){
-            return response.json({
-                status: 'sure',
-                data : request.user.message,
-            })
+            const negocio = await Negocio.findBy('user_id', request.user.message.id)
+
+            if(negocio == null){
+                return response.json({
+                    status: 'sure',
+                    data : request.user.message,
+                    negocio: false
+                })
+            } else{
+                return response.json({
+                    status: 'sure',
+                    data : request.user.message,
+                    negocio: true
+                })
+            }
         } else {
             return response.status(413).json({
                 status:'Unautorized',
