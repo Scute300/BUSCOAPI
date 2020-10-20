@@ -20,7 +20,6 @@ class NegocioSchema extends Schema {
       table.string('logo_secureid').notNullable()
       table.string('portada_secureid').notNullable()
       table.boolean('aprobado').notNullable().defaultTo(false)
-  
       table.timestamps()
     })
   }
