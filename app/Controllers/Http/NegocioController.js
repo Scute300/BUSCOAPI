@@ -6,7 +6,7 @@ const { validate } = use('Validator')
 const Cloudinary = use('Cloudinary')
 class NegocioController {
     async newnegocio({ request, response}){
-        if(request.user,status !== '413'){
+        if(request.user.status !== '413'){
             const data = request.only(['logo', 'portada', 'nombre_negocio', 'categoria', 
             'descripcion', 'latitude', 'longitude', 'tags', 'telefono', 'tiposervicio'])
         
