@@ -63,9 +63,9 @@ class NegocioController {
                 negocio.portada_secureid = portada.public_id
                 negocio.aprobado = true
                 await negocio.save()
-
+                
                 if(data.tags.length > 0){
-                    for (let index = 0; index <= data.tags.length; index++) {
+                    for (let index = 0; index < data.tags.length; index++) {
                         const tag = new Tag()
                         tag.negocio_id = negocio.id
                         tag.etiqueta = data.tags[index]
