@@ -32,6 +32,7 @@ Route.post('/verifyusergoogle', 'UserController.checkgoogleobject')
 
 Route.group(() => {
   Route.post('/login', 'UserController.login') 
+  Route.post('/nuevonegocio', 'NegocioController.newnegocio') 
 })
 .prefix('api/v1')
 

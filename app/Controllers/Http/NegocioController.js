@@ -5,7 +5,7 @@ const Tag = use('App/Models/Tag')
 const { validate } = use('Validator')
 const Cloudinary = use('Cloudinary')
 class NegocioController {
-    async newmegcio({ request, response}){
+    async newnegocio({ request, response}){
         if(request.user,status !== '413'){
             const data = request.only(['logo', 'portada', 'nombre_negocio', 'categoria', 
             'descripcion', 'latitude', 'longitude', 'tags', 'telefono', 'tiposervicio'])
