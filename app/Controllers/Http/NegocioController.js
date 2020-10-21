@@ -68,7 +68,7 @@ class NegocioController {
                     for (let index = 0; index <= data.tags.length; index++) {
                         const tag = new Tag()
                         tag.negocio_id = negocio.id
-                        tag.tag = data.tags[index]
+                        tag.etiqueta = data.tags[index]
                         await tag.save()
                     }
                 }
