@@ -37,8 +37,9 @@ class NegocioController {
     
             if(validation.fails()){
                 const message = validation.messages()
+                console.log(message)
                 let error = message[0]
-    
+                
                 return response.status(400).json({
                     status: 'wrong',
                     message: error
