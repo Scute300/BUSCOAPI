@@ -24,7 +24,6 @@ const { RouteGroup, route } = require('@adonisjs/framework/src/Route/Manager')
 const Route = use('Route')
 
 
-Route.get('/obtenernegocios', 'NegocioController.obtenernegocios')
 
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
@@ -41,6 +40,7 @@ Route.group(() => {
 Route.group(()=>{
   Route.get('/me', 'UserController.me')
   Route.post('/nuevonegocio', 'NegocioController.newnegocio') 
+  Route.get('/obtenernegocios', 'NegocioController.obtenernegocios')
 }).prefix('/api/v2').middleware('detect')
 
 
