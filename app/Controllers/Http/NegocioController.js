@@ -15,7 +15,7 @@ class NegocioController {
                 portada: 'string|required',
                 nombre_negocio: 'string|required|max:30|min:10',
                 categoria:'string|required|max:20',
-                descripcion: 'string|required|min:20|max:200',
+                descripcion: 'string|required|min:5|max:20',
                 latitude: 'required|number',
                 longitude: 'required|number',
                 tags :'array',
@@ -28,8 +28,8 @@ class NegocioController {
                 string: 'Porfavor, llena los campos correctamente',
                 'nombre_negocio.max' : 'El nombre del negocio no puede sobrepasar los 30 caracteres',
                 'nombre_negocio.min' : 'El nombre del negocio no puede sobrepasar los 20 caracteres',
-                'descripcion.min': 'Descripción no puede ser menor a 20 caracteres',
-                'descripcion.max': 'Descripcion no puede ser mayor a 200 caracteres',
+                'descripcion.min': 'Descripción no puede ser menor a 5 caracteres',
+                'descripcion.max': 'Descripcion no puede ser mayor a 20 caracteres',
             }
 
 
