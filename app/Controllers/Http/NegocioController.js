@@ -89,7 +89,7 @@ class NegocioController {
 
 
     async obtenernegocios({auth, request, response}){
-        const data = reques.only(['lat', 'lng'])
+        const data = request.only(['lat', 'lng'])
         let coords1 ={lat: data.lat + 1, lng : data.lng +1}
         let coords2 ={lat: data.lat - 1, lng : data.lng -1}
 
