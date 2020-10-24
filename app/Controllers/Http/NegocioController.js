@@ -98,6 +98,8 @@ class NegocioController {
         .orWhere('latitude', '>', coords2.lat )
         .andWhere('longitude','<', coords1.lng)
         .orWhere('longitude', '<', coords2.lng )
+        .orWhere('latitude', '=', data.lat )
+        .orWhere('longitude', '=', data.lng )
         .fetch()
 
         return response.json({
