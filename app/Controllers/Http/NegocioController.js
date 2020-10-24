@@ -15,7 +15,7 @@ class NegocioController {
                 portada: 'string|required',
                 nombre_negocio: 'string|required|max:30|min:10',
                 categoria:'string|required|max:20',
-                descripcion: 'string|required|min:5|max:20',
+                descripcion: 'string|required|min:5|max:50',
                 latitude: 'required|number',
                 longitude: 'required|number',
                 tags :'array',
