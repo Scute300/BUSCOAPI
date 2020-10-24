@@ -86,6 +86,26 @@ class NegocioController {
             })
         }
     }
+
+
+    async obtenernegocios({auth, request, response}){
+        const data = reques.only(['lat', 'lng'])
+        let coords1 ={lat: data.lat + 1, lng : data.lng +1}
+        let coords2 ={lat: data.lat - 1, lng : data.lng -1}
+
+        const negocios = await Negocio.query()
+        .where('latitude','<',coords1.lat)
+        .orWhere('latitude', '>', coords2.lat )
+        .andWhere('longitude','<', coords1.lng)
+        .orWhere('longitude', '<', coords2.lng )
+        .fetch()
+
+        return response.json({
+            status: 'sure',
+            data: negocios
+        })
+        
+    }
 }
 
 module.exports = NegocioController
