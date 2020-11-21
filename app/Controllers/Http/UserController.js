@@ -261,7 +261,7 @@ class UserController {
         user.cumpleaños = data.cumpleaños
         user.phonenumber = data.phonenumber
         user.city = data.city
-        user.is_Service = data.wantobeservice
+        user.is_service = data.wantobeservice == false ? 0 : 1
         await user.save()
         
         return response.json({
