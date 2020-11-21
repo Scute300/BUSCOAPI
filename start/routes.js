@@ -37,13 +37,6 @@ Route.group(() => {
 })
 .prefix('api/v1')
 
-Route.group(()=>{
-  Route.get('/me', 'UserController.me')
-  Route.post('/nuevonegocio', 'NegocioController.newnegocio') 
-  Route.get('/obtenernegocios', 'NegocioController.obtenernegocios')
-}).prefix('/api/v2').middleware('detect')
-
-
 
 Route.group(()=>{
   Route.put('/changeavatar', 'UserController.updateProfilePic')
@@ -54,7 +47,7 @@ Route.group(()=>{
   Route.put('/modifypassword', 'UserController.modifypassword')
 })
 .prefix('api/v2/account')
-.middleware('auth')
+.middleware('auth').middleware('detect')
 
 Route.group(()=>{
 })
