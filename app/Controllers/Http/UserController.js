@@ -5,7 +5,7 @@ const Cloudinary = use('Cloudinary')
 const Banlist = use('App/Models/Banlist')
 const axios = use('axios')
 const Token = use('App/Models/Token')
-const Negocio = use('App/Models/Negocio')
+const Serviceprofile = use('App/Models/Serviceprofile')
 
 class UserController {
 
@@ -133,63 +133,36 @@ class UserController {
 
 //Metodo "me"
     async me ({ request, response }) {
-        if(request.user.status !== '413'){
-            const negocio = await Negocio.findBy('user_id', request.user.message.id)
 
-            if(negocio == null){
-                return response.json({
-                    status: 'sure',
-                    data : request.user.message,
-                    negocio: false
-                })
-            } else{
-                return response.json({
-                    status: 'sure',
-                    data : request.user.message,
-                    negocio: true
-                })
-            }
-        } else {
-            return response.status(413).json({
-                status:'Unautorized',
-                message: request.user.message,
-            })
-        }
+        return response.json({
+            status: 'sure',
+            data: request.user
+        })
 
     }
 
     async updateProfilePic({ request, auth, response }) {
-        const user = auth.current.user
+        const user = request.user
         try{
-            const banverify = await Banlist.findBy('user_id', user.id)
-                if(banverify == null){
-                const userData = request.only(['avatar']);
-                
-                if(user.avatar !== 'https://res.cloudinary.com/scute/image/upload/v1566358443/recursos/default_hduxaa.png'){
-                
-                const image = user.avatarpublicid
-                await Cloudinary.v2.uploader.destroy(image)
-
-                }
-                const avatar = userData['avatar'];
-                const resultado = await Cloudinary.v2.uploader.upload(avatar);
-
-                user.avatar = resultado.secure_url
-                user.avatarpublicid = resultado.public_id
-                await user.save()
-
-                return response.json({
-                    status: 'success',
-                    data: user
-                })
-            }else{
-
-                return response.status(413).json({
-                    status: 'wrong',
-                    message: 'usuario baneado'
-                })
+            const userData = request.only(['avatar']);
+            
+            if(user.avatar !== 'https://res.cloudinary.com/dukgqrudk/image/upload/v1605969531/no-avatar-png-8_sbc3tp.png'){
+            
+            const image = user.avatarpublicid
+            await Cloudinary.v2.uploader.destroy(image)
 
             }
+            const avatar = userData['avatar'];
+            const resultado = await Cloudinary.v2.uploader.upload(avatar);
+
+            user.avatar = resultado.secure_url
+            user.avatarpublicid = resultado.public_id
+            await user.save()
+
+            return response.json({
+                status: 'success',
+                data: user
+            })
         }catch(error){
             console.log(error)
             return response.status(404).json({
@@ -200,20 +173,45 @@ class UserController {
     }
 
     async editprofile({auth, request,response}){
-        const data = request.only(['name', 'cumpleaños', 'bio'])
-        const rules = {
-            name: 'min:8|string|max:25|alpha',
-            cumpleaños: 'min:8|string|max:8',
-            bio: 'string|max:100'
+        const data = request.only(['name', 'cumpleaños', 'wanttobeservice', 'bio', 'category', 'phonenumber', 'city'])
+        let rules = undefined
+        let messages = undefined
+
+        if( typeof(data.wantobeservice) !== 'boolean' ){
+            return response.status(401).json({
+                status: 'wrong'
+            })
         }
 
-        const messages = {
-        'name.min': 'Nombre debe tener al menos 8 caracteres',
-        'name.max':'Nombre no debe exceder 25 caracteres',
-        'name.alpha': 'Nombre no puede contener simbolos',
-        'cumpleaños.min' : 'Llena tu fecha de nacimiento correctamente',
-        'cumpleaños.max' : 'Llena tu fecha de nacimiento correctamente',
-        'bio.max' : 'Biografia no debe exceder 100 caracteres'
+        if(data.wantobeservice == true){
+        
+            rules = {
+                name: 'min:8|string|max:25|alpha',
+                cumpleaños: 'min:8|string|max:8',       
+                phonenumber: 'min:10|max:10|string',
+                category: 'min:15|max:15|string',
+                bio: 'min:15|max:200',
+                wantobeservice: 'boolean'
+            }
+
+            messages = {
+            'name.min': 'Nombre debe tener al menos 8 caracteres',
+            'name.max':'Nombre no debe exceder 25 caracteres',
+            'name.alpha': 'Nombre no puede contener simbolos',
+            'cumpleaños.min' : 'Llena tu fecha de nacimiento correctamente',
+            'cumpleaños.max' : 'Llena tu fecha de nacimiento correctamente',
+            'bio.max' : 'Biografia no debe exceder 100 caracteres'
+            }
+
+        } else{
+        
+            rules = {
+                name: 'min:8|string|max:25|alpha',
+                cumpleaños: 'min:8|string|max:8',       
+                phonenumber: 'min:10|max:10' ,
+                wantobeservice: 'boolean'   
+            }
+
         }
 
         const validation = await validate(data, rules, messages)
@@ -225,26 +223,40 @@ class UserController {
                 status: 'wrong',
                 message: error.message
             })
-        } else {
-            const user = auth.current.user
-            const banverify = await Banlist.findBy('user_id', user.id)
-            if(banverify == null){
-                user.name = data.name
-                user.cumpleaños = data.cumpleaños
-                user.bio = data.bio
-                await user.save()
-                
-                return response.json({
-                    status: 'sure',
-                    data:user
-                })
-            }else {
-                return response.json({
-                    status: 'sure',
-                    data:'usuario baneado'
-                })
+        }
+        
+        const user = request.user
+        
+        if(data.wantobeservice == true){
+            let service  = await Serviceprofile.findBy('user_id', user.id)
+            if(service == null){
+                service = await new Serviceprofile()
+                service.user_id = user.id
+                service.category = data.category
+                service.bio = data.bio
+                await service.save()
+
+            } else {
+                service.user_id = user.id
+                service.category = data.category
+                service.bio = data.bio
+                await service.save()
             }
-        } 
+        }
+        
+        user.name = data.name
+        user.cumpleaños = data.cumpleaños
+        user.phonenumber = data.phonenumber
+        user.city = data.city
+        user.is_Service = data.wantobeservice
+        await user.save()
+        
+        return response.json({
+            status: 'sure',
+            data:user
+        })
+
+
 
     }
   

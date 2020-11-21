@@ -33,8 +33,8 @@ class User extends Model {
     return this.belongsTo('App/Models/Banlist')
   }
 
-  negocios(){
-    return this.hasMany('App/Models/Negocio')
+  serviceprofile(){
+    return this.hasOne('App/Models/Serviceprofile')
   }
 }
 

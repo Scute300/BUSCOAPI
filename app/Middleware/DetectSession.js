@@ -12,19 +12,28 @@ class DetectSession {
    * @param {Request} ctx.request
    * @param {Function} next
    */
-  async handle ({ request }, next) {
+  async handle ({ request, Response }, next) {
     const tokenheader = request.header('Authorization')
       const token = await Token.findBy('token', tokenheader)
       
-      if(token !== null){
-        
-        const user = await User.findBy('id', token.user_id)
-        const banverify = await Banlist.findBy('user_id', token.user_id)
-
-        banverify == null ? request.user={status : '200', message:user} : request.user = {status: '413', message:`You're bannerd for ${banverify.reason}`}
-      }else {
-        request.user = {status: '413', message:'Unautorized'}
+      if(token == null){
+        return Response.status(401).json({
+          status:'Unautorized',
+          message: 'sesion inactiva'
+        })
       }
+        
+      const user = await User.findBy('id', token.user_id)
+      const banverify = await Banlist.findBy('user_id', token.user_id)
+      if(banverify !== null){
+        return Response.status(401).json({
+          status:'Unautorized',
+          message: 'Estás Baneado por: '+banverify.reason
+        })
+      }
+
+     request.user = user
+    
     await next()
   }
 }
