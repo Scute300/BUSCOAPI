@@ -133,11 +133,21 @@ class UserController {
 
 //Metodo "me"
     async me ({ request, response }) {
-
-        return response.json({
-            status: 'sure',
-            data: request.user
-        })
+        const service = await Serviceprofile.findBy('user_id', request.user.id)
+        if (service == null ){
+            return response.json({
+                status: 'sure',
+                data: request.user,
+                service: false
+            })
+        } else{
+            return response.json({
+                status: 'sure',
+                data: request.user,
+                service: service
+            })
+            
+        }
 
     }
 
@@ -186,15 +196,17 @@ class UserController {
         if(data.wantobeservice == true){
         
             rules = {
-                name: 'min:8|string|max:25|alpha',
-                cumpleaños: 'min:8|string|max:8',       
-                phonenumber: 'min:10|max:10|string',
-                category: 'min:15|max:15|string',
-                bio: 'min:15|max:200',
-                wantobeservice: 'boolean'
+                name: 'min:8|string|max:25|alpha|required',
+                cumpleaños: 'min:8|string|max:8|required',       
+                phonenumber: 'min:10|max:10|string|required',
+                category: 'min:15|max:15|string|required',
+                bio: 'min:15|max:200|required',
+                wantobeservice: 'boolean|required',
+                city: 'min:15|max:60|required',
             }
 
             messages = {
+            required: 'Llenar todos los campos es requerido si quieres ofrecer un servicio',
             'name.min': 'Nombre debe tener al menos 8 caracteres',
             'name.max':'Nombre no debe exceder 25 caracteres',
             'name.alpha': 'Nombre no puede contener simbolos',
@@ -206,10 +218,11 @@ class UserController {
         } else{
         
             rules = {
-                name: 'min:8|string|max:25|alpha',
-                cumpleaños: 'min:8|string|max:8',       
-                phonenumber: 'min:10|max:10' ,
-                wantobeservice: 'boolean'   
+                name: 'string|max:25|alpha',
+                cumpleaños: 'string|max:8',       
+                phonenumber: 'max:10' ,
+                wantobeservice: 'boolean|required', 
+                city: 'string|max:60'  
             }
 
         }
