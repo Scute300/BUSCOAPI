@@ -188,7 +188,7 @@ class UserController {
         
             rules = {
                 name: 'min:8|string|max:25|required',
-                cumpleaños: 'min:8|string|max:8|required',       
+                cumpleaños: 'min:8|number|max:8|required',       
                 phonenumber: 'min:10|max:10|string|required',
                 category: 'min:15|max:15|string|required',
                 bio: 'min:15|max:200|required',
@@ -210,7 +210,7 @@ class UserController {
         
             rules = {
                 name: 'string|max:25',
-                cumpleaños: 'string|max:8',       
+                cumpleaños: 'number|max:8',       
                 phonenumber: 'max:10' ,
                 wanttobeservice: 'boolean|required', 
                 city: 'string|max:60'  
