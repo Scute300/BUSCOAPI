@@ -17,7 +17,7 @@ class DetectSession {
       const token = await Token.findBy('token', tokenheader)
       
       if(token == null){
-        return Response.status(401).json({
+        return response.status(401).json({
           status:'Unautorized',
           message: 'sesion inactiva'
         })
@@ -25,8 +25,9 @@ class DetectSession {
         
       const user = await User.findBy('id', token.user_id)
       const banverify = await Banlist.findBy('user_id', token.user_id)
+      
       if(banverify !== null){
-        return Response.status(401).json({
+        return response.status(401).json({
           status:'Unautorized',
           message: 'Estás Baneado por: '+banverify.reason
         })
