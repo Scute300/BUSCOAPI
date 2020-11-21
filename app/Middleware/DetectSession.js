@@ -12,7 +12,7 @@ class DetectSession {
    * @param {Request} ctx.request
    * @param {Function} next
    */
-  async handle ({ request, Response }, next) {
+  async handle ({ request, response }, next) {
     const tokenheader = request.header('Authorization')
       const token = await Token.findBy('token', tokenheader)
       
