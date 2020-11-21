@@ -39,6 +39,7 @@ Route.group(() => {
 
 
 Route.group(()=>{
+  Route.get('/me', 'UserController.me')
   Route.put('/changeavatar', 'UserController.updateProfilePic')
   Route.put('/changelocation', 'UserController.ubicacion')
   Route.put('/updateprofile', 'UserController.editprofile')
@@ -46,8 +47,7 @@ Route.group(()=>{
   Route.put('/modifyemail', 'UserController.modifyemail')
   Route.put('/modifypassword', 'UserController.modifypassword')
 })
-.prefix('api/v2/account')
-.middleware('auth').middleware('detect')
+.prefix('api/v2/account').middleware('detect')
 
 Route.group(()=>{
 })
@@ -63,5 +63,4 @@ Route.group(()=>{
 
 
 })
-.prefix('api/v2/panel')
-.middleware('auth')
+.prefix('api/v2/panel').middleware('detect')
