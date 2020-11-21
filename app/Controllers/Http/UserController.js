@@ -184,7 +184,7 @@ class UserController {
             })
         }
 
-        if(data.wantobeservice == true){
+        if(data.wanttobeservice == true){
         
             rules = {
                 name: 'min:8|string|max:25|required',
@@ -192,7 +192,7 @@ class UserController {
                 phonenumber: 'min:10|max:10|string|required',
                 category: 'min:15|max:15|string|required',
                 bio: 'min:15|max:200|required',
-                wantobeservice: 'boolean|required',
+                wanttobeservice: 'boolean|required',
                 city: 'min:15|max:60|required',
             }
 
@@ -212,7 +212,7 @@ class UserController {
                 name: 'string|max:25',
                 cumpleaños: 'string|max:8',       
                 phonenumber: 'max:10' ,
-                wantobeservice: 'boolean|required', 
+                wanttobeservice: 'boolean|required', 
                 city: 'string|max:60'  
             }
 
@@ -231,7 +231,7 @@ class UserController {
         
         const user = request.user
         
-        if(data.wantobeservice == true){
+        if(data.wanttobeservice == true){
             let service  = await Serviceprofile.findBy('user_id', user.id)
             if(service == null){
                 service = await new Serviceprofile()
@@ -252,7 +252,7 @@ class UserController {
         user.cumpleaños = data.cumpleaños
         user.phonenumber = data.phonenumber
         user.city = data.city
-        user.is_service = data.wantobeservice == false ? 0 : 1
+        user.is_service = data.wanttobeservice == false ? 0 : 1
         await user.save()
         
         return response.json({
