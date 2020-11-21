@@ -209,7 +209,7 @@ class UserController {
         } else{
         
             rules = {
-                name: 'string|max:25|alpha',
+                name: 'string|max:25',
                 cumpleaños: 'string|max:8',       
                 phonenumber: 'max:10' ,
                 wantobeservice: 'boolean|required', 
