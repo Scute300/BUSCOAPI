@@ -187,7 +187,7 @@ class UserController {
         if(data.wantobeservice == true){
         
             rules = {
-                name: 'min:8|string|max:25|alpha|required',
+                name: 'min:8|string|max:25|required',
                 cumpleaños: 'min:8|string|max:8|required',       
                 phonenumber: 'min:10|max:10|string|required',
                 category: 'min:15|max:15|string|required',
