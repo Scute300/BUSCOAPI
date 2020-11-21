@@ -134,20 +134,11 @@ class UserController {
 //Metodo "me"
     async me ({ request, response }) {
         const service = await Serviceprofile.findBy('user_id', request.user.id)
-        if (service == null ){
-            return response.json({
-                status: 'sure',
-                data: request.user,
-                service: false
-            })
-        } else{
-            return response.json({
-                status: 'sure',
-                data: request.user,
-                service: service
-            })
-            
-        }
+        return response.json({
+            status: 'sure',
+            data: request.user,
+            service: false
+        })
 
     }
 
@@ -187,7 +178,7 @@ class UserController {
         let rules = undefined
         let messages = undefined
 
-        if( typeof(data.wantobeservice) !== 'boolean' ){
+        if( typeof(data.wanttobeservice) !== 'boolean' ){
             return response.status(401).json({
                 status: 'wrong'
             })
