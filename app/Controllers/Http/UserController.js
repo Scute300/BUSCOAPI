@@ -190,7 +190,7 @@ class UserController {
                 name: 'min:8|string|max:25|required',
                 cumpleaños: 'min:8|number|max:8|required',       
                 phonenumber: 'string:10|max:10|string|required',
-                category: 'min:15|max:15|string|required',
+                category: 'max:15|string|required',
                 bio: 'min:15|max:200|required',
                 wanttobeservice: 'boolean|required',
                 city: 'min:15|max:60|required',
