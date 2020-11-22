@@ -33,6 +33,7 @@ Route.get('/reset', 'UserController.reset')
 Route.post('/verifyusergoogle', 'UserController.checkgoogleobject')
 
 Route.group(() => {
+  Route.post('/getallservices', 'ServiceController.getallservices')
   Route.post('/login', 'UserController.login') 
 })
 .prefix('api/v1')
