@@ -134,6 +134,14 @@ class UserController {
 //Metodo "me"
     async me ({ request, response }) {
         const service = await Serviceprofile.findBy('user_id', request.user.id)
+        if(service !== null){
+            return response.json({
+                status: 'sure',
+                data: request.user,
+                service: service
+            })
+
+        }
         return response.json({
             status: 'sure',
             data: request.user,
