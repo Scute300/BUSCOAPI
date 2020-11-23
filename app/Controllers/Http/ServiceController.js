@@ -13,6 +13,7 @@ class ServiceController {
         if(data.city == null){
             const services= await User.query()
             .with('serviceprofile')
+            .fetch()
     
             return response.json({
                 data: services
@@ -22,6 +23,7 @@ class ServiceController {
             const services= await User.query()
             .where('city', data.city)
             .with('serviceprofile')
+            .fetch()
     
             return response.json({
                 data: services
