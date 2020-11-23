@@ -9,7 +9,7 @@ const Serviceprofile = use('App/Models/Serviceprofile')
 
 class ServiceController {
     async getallservices({auth, request, response}){
-        const data = raquest.only(['city'])
+        const data = request.only(['city'])
         if(data.city == null){
             const services= await User.query()
             .with('serviceprofile')

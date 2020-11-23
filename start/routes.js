@@ -35,6 +35,7 @@ Route.post('/verifyusergoogle', 'UserController.checkgoogleobject')
 Route.group(() => {
   Route.post('/getallservices', 'ServiceController.getallservices')
   Route.post('/login', 'UserController.login') 
+  Route.post('/obtainservices', 'ServiceController.getallservices')
 })
 .prefix('api/v1')
 
