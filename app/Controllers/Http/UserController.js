@@ -258,7 +258,7 @@ class UserController {
         }
         
         user.name = data.name
-        user.cumpleaños = data.cumpleaños
+        user.edad = data.cumpleaños
         user.phonenumber = data.phonenumber
         user.city = data.city
         user.is_service = data.wanttobeservice == false ? 0 : 1
