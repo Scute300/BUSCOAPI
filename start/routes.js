@@ -36,6 +36,7 @@ Route.group(() => {
   Route.post('/getallservices', 'ServiceController.getallservices')
   Route.post('/login', 'UserController.login') 
   Route.post('/obtainservices', 'ServiceController.getallservices')
+  Route.post('/find', 'ServiceController.findservices')
 })
 .prefix('api/v1')
 

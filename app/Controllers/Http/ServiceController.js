@@ -31,6 +31,32 @@ class ServiceController {
 
         }
     }
+
+    findservices({request, response}){
+        const data = request.only(['city', 'category'])
+        if(data.city == null ){
+            const services= await User.query()
+            .where('category', data.categoty)
+            .with('serviceprofile')
+            .fetch()
+    
+            return response.json({
+                data: services
+            })
+
+        } else {
+            const services= await User.query()
+            .where('category', data.categoty)
+            .where('city', data.city)
+            .with('serviceprofile')
+            .fetch()
+    
+            return response.json({
+                data: services
+            })
+
+        }
+    }
 }
 
 module.exports = ServiceController
