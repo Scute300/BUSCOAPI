@@ -32,7 +32,7 @@ class ServiceController {
         }
     }
 
-    findservices({request, response}){
+    async findservices({request, response}){
         const data = request.only(['city', 'category'])
         if(data.city == null ){
             const services= await User.query()
