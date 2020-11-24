@@ -238,9 +238,10 @@ class UserController {
         }
         
         const user = request.user
-        
+        let service = undefined
+
         if(data.wanttobeservice == true){
-            let service  = await Serviceprofile.findBy('user_id', user.id)
+            service  = await Serviceprofile.findBy('user_id', user.id)
             if(service == null){
                 service = await new Serviceprofile()
                 service.user_id = user.id
@@ -262,11 +263,22 @@ class UserController {
         user.city = data.city
         user.is_service = data.wanttobeservice == false ? 0 : 1
         await user.save()
-        
-        return response.json({
-            status: 'sure',
-            data:user
-        })
+
+        if(data.wanttobeservice == true){
+            return response.json({
+                status: 'sure',
+                data:user,
+                service: service
+            })
+
+        } else{
+            return response.json({
+                status: 'sure',
+                data:user,
+                service: false
+            })
+
+        }
 
 
 
